@@ -210,7 +210,14 @@ class LocalDbService {
 
     return result.map((e) => TransactionModel.fromMap(e)).toList();
   }
-
+  Future<void> deleteTransactionsByUserId(int userId) async {
+    final database = await db;
+    await database.delete(
+      'transactions',
+      where: 'userId = ?',
+      whereArgs: [userId],
+    );
+  }
 
 
 }

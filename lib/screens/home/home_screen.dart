@@ -4,7 +4,6 @@ import 'package:money_management/screens/home/widgets/transactions_cards.dart';
 import 'package:money_management/screens/home/widgets/hero_card.dart';
 import '../../../models/local_db_service.dart';
 import '../../../models/user_model.dart';
-
 class HomeScreen extends StatefulWidget {
   final int userId;
   final VoidCallback? onTransactionAdded; // Callback từ Dashboard
@@ -30,7 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
       currentUser = user;
     });
   }
-
+  void fetchTransactions() {
+    recentTransactionListKey.currentState?.fetchTransactions();
+    _loadCurrentUser(); // Làm mới HeroCard
+  }
   void _dialogBuilder(BuildContext context) {
     showDialog(
       context: context,
@@ -38,14 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
         content: AddTransactionForm(
           userId: widget.userId,
           onTransactionAdded: () {
-            // Làm mới danh sách giao dịch
-            recentTransactionListKey.currentState?.fetchTransactions();
+            fetchTransactions();
             widget.onTransactionAdded?.call();
           },
         ),
       ),
     ).then((_) {
-      _loadCurrentUser(); // Làm mới dữ liệu người dùng để cập nhật HeroCard
+      _loadCurrentUser();
     });
   }
 

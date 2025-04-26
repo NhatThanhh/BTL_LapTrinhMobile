@@ -1,5 +1,5 @@
 import 'package:money_management/screens/home/home_screen.dart';
-// import 'package:quanlychitieu/screens/profile/profile_screen.dart';
+import 'package:money_management/screens/profile/profile_screen.dart';
 import 'package:money_management/screens/statistics/statistics_screen.dart';
 import 'package:money_management/screens/transactions/transactions_screen.dart';
 import 'package:money_management/widgets/navbar.dart';
@@ -19,7 +19,11 @@ class _DashboardState extends State<Dashboard> {
   int currentIndex = 0;
   late List<Widget> pageViewList;
   late StatisticsScreen _statisticsScreen;
+  late HomeScreen _homeScreen;
+  late TransactionsScreen _transactionsScreen;
   final _statisticsScreenKey = GlobalKey<StatisticsScreenState>();
+  final _homeScreenKey = GlobalKey();
+  final _transactionsScreenKey = GlobalKey();// Thêm GlobalKey cho TransactionsScreen
   @override
   void initState() {
     super.initState();
@@ -27,18 +31,35 @@ class _DashboardState extends State<Dashboard> {
       userId: widget.userId,
       key: _statisticsScreenKey,
     );
-    // Khởi tạo pageViewList trong initState để sử dụng widget.userId
+    _homeScreen = HomeScreen(
+      key: _homeScreenKey,
+      userId: widget.userId,
+      onTransactionAdded: _refreshScreens,
+    );
+    _transactionsScreen = TransactionsScreen(
+      key: _transactionsScreenKey,
+      userId: widget.userId,
+      onTransactionAdded: _refreshScreens,
+    );
     pageViewList = [
-      HomeScreen(userId: widget.userId,
-        onTransactionAdded: () {
-          _statisticsScreenKey.currentState?.refreshCharts();
-        },),
+      _homeScreen,
       _statisticsScreen,
-      TransactionsScreen(userId: widget.userId),
-      // ProfileScreen(),
+      _transactionsScreen,
+      ProfileScreen(
+        userId: widget.userId,
+        onDataRestored: _refreshScreens,
+      ),
     ];
   }
+  void _refreshScreens() {
+    final statisticsState = _statisticsScreenKey.currentState as dynamic;
+    final homeState = _homeScreenKey.currentState as dynamic;
+    final transactionsState = _transactionsScreenKey.currentState as dynamic;
 
+    statisticsState?.refreshCharts();
+    homeState?.fetchTransactions();
+    transactionsState?.fetchTransactions();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

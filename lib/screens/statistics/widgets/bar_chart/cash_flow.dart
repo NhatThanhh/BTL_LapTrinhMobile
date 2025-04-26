@@ -15,83 +15,106 @@ class CashFlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     NumberFormat currencyFormat =
-        NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
+    NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
 
     return Container(
-      padding: EdgeInsets.all(16.0),
-      margin: EdgeInsets.symmetric(vertical: 16.0),
+      padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: Offset(0, 3),
+            color: Colors.black.withOpacity(0.05),
+            spreadRadius: 0,
+            blurRadius: 10,
+            offset: Offset(0, 5),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Dòng tiền',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            children: [
+              Icon(
+                Icons.account_balance_wallet,
+                color: Color(0xFF4285F4),
+                size: 24,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'Dòng tiền',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF2C3E50),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          _buildInfoRow(
+            'Số dư tài khoản',
+            currencyFormat.format(remainingAmount),
+            remainingAmount >= 0 ? Color(0xFF2C3E50) : Colors.red,
+            Icons.account_balance,
+          ),
+          Divider(height: 24, color: Colors.grey.shade200),
+          _buildInfoRow(
+            'Tổng thu',
+            currencyFormat.format(totalCredit),
+            Colors.green,
+            Icons.arrow_downward,
           ),
           SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Số dư tài khoản',
-                style: TextStyle(fontSize: 16),
-              ),
-              Text(
-                currencyFormat.format(remainingAmount),
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Tổng thu',
-                style: TextStyle(fontSize: 16, color: Colors.green),
-              ),
-              Text(
-                currencyFormat.format(totalCredit),
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Tổng chi',
-                style: TextStyle(fontSize: 16, color: Colors.red),
-              ),
-              Text(
-                currencyFormat.format(totalDebit),
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red),
-              ),
-            ],
+          _buildInfoRow(
+            'Tổng chi',
+            currencyFormat.format(totalDebit),
+            Colors.red,
+            Icons.arrow_upward,
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value, Color valueColor, IconData icon) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Color(0xFFEAF2FD),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: Color(0xFF4285F4),
+                size: 20,
+              ),
+            ),
+            SizedBox(width: 12),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 16,
+                color: Color(0xFF2C3E50),
+              ),
+            ),
+          ],
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: valueColor,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/screens/transactions/widgets/transaction_list.dart';
 
-class TypeTabBar extends StatelessWidget {
+class TypeTabBar extends StatefulWidget {
   final int userId;
   final String category;
   final String monthYear;
 
   const TypeTabBar({
-    Key? key,
+    super.key,
     required this.userId,
     required this.category,
     required this.monthYear,
-  }) : super(key: key);
+  });
+
+  @override
+  TypeTabBarState createState() => TypeTabBarState();
+}
+
+class TypeTabBarState extends State<TypeTabBar> {
+  int _refreshCount = 0; // Biến để buộc rebuild TransactionList
+
+  void fetchTransactions() {
+    setState(() {
+      _refreshCount++;
+    });
+  }
+
+  void searchTransactions(String query) {
+    // Gửi query xuống TransactionList (sẽ cập nhật trong TransactionList)
+    setState(() {
+      _refreshCount++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +51,20 @@ class TypeTabBar extends StatelessWidget {
               child: TabBarView(
                 children: [
                   TransactionList(
-                    userId: userId,
-                    category: category,
-                    monthYear: monthYear,
+                    key: ValueKey('credit_$_refreshCount'),
+                    userId: widget.userId,
+                    category: widget.category,
+                    monthYear: widget.monthYear,
                     type: 'credit',
+                    onTransactionChanged: fetchTransactions,
                   ),
                   TransactionList(
-                    userId: userId,
-                    category: category,
-                    monthYear: monthYear,
+                    key: ValueKey('debit_$_refreshCount'),
+                    userId: widget.userId,
+                    category: widget.category,
+                    monthYear: widget.monthYear,
                     type: 'debit',
+                    onTransactionChanged: fetchTransactions,
                   ),
                 ],
               ),

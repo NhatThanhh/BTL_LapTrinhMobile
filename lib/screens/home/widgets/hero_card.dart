@@ -15,9 +15,9 @@ class HeroCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Cards(
-        remainingAmount: formatCurrency(user.remainingAmount),
-        totalCredit: formatCurrency(user.totalCredit),
-        totalDebit: formatCurrency(user.totalDebit),
+      remainingAmount: formatCurrency(user.remainingAmount),
+      totalCredit: formatCurrency(user.totalCredit),
+      totalDebit: formatCurrency(user.totalDebit),
     );
   }
 }

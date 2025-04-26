@@ -49,123 +49,155 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF1E292F),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 50.0),
-                SizedBox(
-                  width: 250,
-                  child: Text(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFA1C4F8), // Xanh dương pastel đậm hơn
+              Colors.white,
+            ],
+            stops: [0.0, 1.0],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 60.0),
+                  // Icon app
+                  Icon(
+                    Icons.person_add_alt_1,
+                    size: 70,
+                    color: Color(0xFF4285F4),
+                  ),
+                  SizedBox(height: 15.0),
+                  Text(
                     "Tạo tài khoản mới",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        color: Colors.white,
+                        color: Color(0xFF2C3E50),
                         fontSize: 28,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(height: 40.0),
-                TextFormField(
-                  controller: _userNameController,
-                  style: TextStyle(color: Colors.white),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: _buildInputDecoration("Tài khoản", Icons.person),
-                  validator: appValidator.validateUserName,
-                ),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Colors.white),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: _buildInputDecoration("Email", Icons.email),
-                  validator: appValidator.validateEmail,
-                ),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
-                  style: TextStyle(color: Colors.white),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: _buildInputDecoration("Số điện thoại", Icons.call),
-                  validator: appValidator.validatePhoneNumber,
-                ),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _passwordController,
-                  style: TextStyle(color: Colors.white),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: _buildInputDecoration("Mật khẩu", Icons.lock),
-                  validator: appValidator.validatePassword,
-                ),
-                SizedBox(height: 40.0),
-                SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFCC5311)),
-                    onPressed: () {
-                      isLoader ? print("Đang tải...") : _submitForm();
-                    },
-                    child: isLoader
-                        ? Center(child: CircularProgressIndicator())
-                        : Text(
-                      "Tạo",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
+                        fontWeight: FontWeight.bold
                     ),
                   ),
-                ),
-                SizedBox(height: 20.0),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Divider(thickness: 1, color: Colors.grey),
-                    Container(
-                      color: Color(0xFF1E292F),
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text(
-                        "Hoặc",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
+                  SizedBox(height: 35.0),
+                  // Username field
+                  TextFormField(
+                    controller: _userNameController,
+                    style: TextStyle(color: Color(0xFF2C3E50)),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: _buildInputDecoration("Tài khoản", Icons.person),
+                    validator: appValidator.validateUserName,
+                  ),
+                  SizedBox(height: 16.0),
+                  // Email field
+                  TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    style: TextStyle(color: Color(0xFF2C3E50)),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: _buildInputDecoration("Email", Icons.email),
+                    validator: appValidator.validateEmail,
+                  ),
+                  SizedBox(height: 16.0),
+                  // Phone field
+                  TextFormField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    style: TextStyle(color: Color(0xFF2C3E50)),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: _buildInputDecoration("Số điện thoại", Icons.call),
+                    validator: appValidator.validatePhoneNumber,
+                  ),
+                  SizedBox(height: 16.0),
+                  // Password field
+                  TextFormField(
+                    controller: _passwordController,
+                    style: TextStyle(color: Color(0xFF2C3E50)),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    obscureText: true,
+                    decoration: _buildInputDecoration("Mật khẩu", Icons.lock),
+                    validator: appValidator.validatePassword,
+                  ),
+                  SizedBox(height: 40.0),
+                  // Signup button
+                  SizedBox(
+                    height: 55,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF4285F4),
+                        foregroundColor: Colors.white,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20.0),
-                // Nếu bạn dùng SQLite thì tạm thời có thể bỏ phần Google Sign-in này
-                // hoặc bạn có thể tự custom lại để lưu info Google vào SQLite
-                SizedBox(height: 30.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Bạn đã có tài khoản? ",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                    TextButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginView()),
-                        );
+                        isLoader ? print("Đang tải...") : _submitForm();
                       },
-                      child: Text(
-                        "Đăng nhập",
-                        style:
-                        TextStyle(fontSize: 16, color: Color(0xFFCC5311)),
+                      child: isLoader
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                        "Tạo tài khoản",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  SizedBox(height: 20.0),
+                  // Divider
+                  Row(
+                    children: [
+                      Expanded(child: Divider(thickness: 1, color: Colors.grey.shade400)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          "Hoặc",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Divider(thickness: 1, color: Colors.grey.shade400)),
+                    ],
+                  ),
+                  SizedBox(height: 25.0),
+                  // Login link
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Bạn đã có tài khoản? ",
+                        style: TextStyle(fontSize: 15, color: Colors.grey.shade700),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginView()),
+                          );
+                        },
+                        child: Text(
+                          "Đăng nhập",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Color(0xFF4285F4),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -173,20 +205,30 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  InputDecoration _buildInputDecoration(String label, IconData suffixIcon) {
+  InputDecoration _buildInputDecoration(String label, IconData prefixIcon) {
     return InputDecoration(
-        fillColor: Color(0xFF414A54),
-        enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF0D23DA))),
-        focusedBorder:
-        OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-        filled: true,
-        labelStyle: TextStyle(color: Color(0xFF949494)),
-        labelText: label,
-        suffixIcon: Icon(
-          suffixIcon,
-          color: Color(0xFF949494),
-        ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)));
+      fillColor: Colors.white,
+      filled: true,
+      labelText: label,
+      labelStyle: TextStyle(color: Colors.grey.shade700),
+      prefixIcon: Icon(prefixIcon, color: Color(0xFF4285F4)),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15.0),
+        borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15.0),
+        borderSide: BorderSide(color: Color(0xFF4285F4), width: 2.0),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15.0),
+        borderSide: BorderSide(color: Colors.red.shade300, width: 1.0),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15.0),
+        borderSide: BorderSide(color: Colors.red.shade400, width: 2.0),
+      ),
+      contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+    );
   }
 }

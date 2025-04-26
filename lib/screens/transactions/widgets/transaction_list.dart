@@ -11,6 +11,7 @@ class TransactionList extends StatelessWidget {
   final String category;
   final String type;
   final String monthYear;
+  final VoidCallback? onTransactionChanged; // Thêm callback
 
   const TransactionList({
     super.key,
@@ -18,6 +19,7 @@ class TransactionList extends StatelessWidget {
     required this.category,
     required this.type,
     required this.monthYear,
+    this.onTransactionChanged,
   });
 
   @override
@@ -83,7 +85,7 @@ class TransactionList extends StatelessWidget {
                   ),
                   child: TransactionCard(
                     data: transaction,
-                    user: user, // Truyền UserModel
+                    user: user,
                   ),
                 );
               },
@@ -107,7 +109,6 @@ class TransactionList extends StatelessWidget {
   }
 
   Future<void> _deleteTransaction(BuildContext context, TransactionModel transaction, UserModel user) async {
-    // Hoàn tác ảnh hưởng của giao dịch
     int newRemaining = user.remainingAmount;
     int newTotalCredit = user.totalCredit;
     int newTotalDebit = user.totalDebit;
@@ -133,6 +134,7 @@ class TransactionList extends StatelessWidget {
 
     await LocalDbService.instance.insertUser(updatedUser);
     await LocalDbService.instance.deleteTransaction(transaction.id!);
+    onTransactionChanged?.call(); // Gọi callback
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Giao dịch đã được xóa')),

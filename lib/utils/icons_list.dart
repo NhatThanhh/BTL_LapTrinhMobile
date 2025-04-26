@@ -41,10 +41,6 @@ class AppIcons {
       'icon': FontAwesomeIcons.utensils,
     },
     {
-      'name': 'Mua sắm',
-      'icon': FontAwesomeIcons.shoppingBag,
-    },
-    {
       'name': 'Giáo dục',
       'icon': FontAwesomeIcons.graduationCap,
     },

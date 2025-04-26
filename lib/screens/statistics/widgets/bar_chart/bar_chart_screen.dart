@@ -54,9 +54,9 @@ class _BarChartScreenState extends State<BarChartScreen> {
   }
 
   void nextMonth() {
-    setState() {
+    setState(() {
       currentMonth = DateTime(currentMonth.year, currentMonth.month + 1, 1);
-    }
+    });
   }
 
   Future<UserModel?> _fetchUser() async {
@@ -89,7 +89,8 @@ class _BarChartScreenState extends State<BarChartScreen> {
       )
     ];
 
-    for (int i = 1; i <= 5; i++) {
+    // Chỉ lấy 2 tháng trước (tổng 3 tháng)
+    for (int i = 1; i <= 2; i++) {
       DateTime prevMonth = DateTime(currentMonth.year, currentMonth.month - i, 1);
       String prevMonthYear = DateFormat('M/y').format(prevMonth);
 
@@ -123,147 +124,303 @@ class _BarChartScreenState extends State<BarChartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Biểu đồ tài chính',
-          style: TextStyle(fontWeight: FontWeight.bold),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   elevation: 0,
+      //   backgroundColor: Colors.transparent,
+      //   title: const Text(
+      //     'Biểu đồ tài chính',
+      //     style: TextStyle(
+      //       fontWeight: FontWeight.bold,
+      //       color: Color(0xFF2C3E50),
+      //       fontSize: 22,
+      //     ),
+      //   ),
+      // ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFEAF2FD), // Xanh dương pastel nhạt
+              Colors.white,
+            ],
+            stops: [0.0, 0.7],
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            FutureBuilder<UserModel?>(
-              future: _fetchUser(),
-              builder: (context, userSnapshot) {
-                if (userSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (userSnapshot.hasError || !userSnapshot.hasData) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                        const SizedBox(height: 16),
-                        Text('Lỗi: Không tìm thấy người dùng ${widget.userId}'),
-                      ],
-                    ),
-                  );
-                }
-
-                final user = userSnapshot.data!;
-                print("Đang tạo biểu đồ cho User: ${user.username} (ID: ${user.id})");
-
-                return FutureBuilder<List<ChartTransaction>>(
-                  future: _fetchChartData(),
-                  builder: (context, chartSnapshot) {
-                    if (chartSnapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(50.0),
-                          child: CircularProgressIndicator(),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              FutureBuilder<UserModel?>(
+                future: _fetchUser(),
+                builder: (context, userSnapshot) {
+                  if (userSnapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(40.0),
+                        child: CircularProgressIndicator(
+                          color: Color(0xFF4285F4),
                         ),
-                      );
-                    }
-                    if (chartSnapshot.hasError) {
-                      return Center(child: Text('Lỗi: ${chartSnapshot.error}'));
-                    }
-                    if (!chartSnapshot.hasData || chartSnapshot.data!.isEmpty) {
-                      return const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(50.0),
-                          child: Column(
-                            children: [
-                              Icon(Icons.info_outline, size: 48, color: Colors.grey),
-                              SizedBox(height: 16),
-                              Text('Chưa có giao dịch nào'),
-                            ],
+                      ),
+                    );
+                  }
+                  if (userSnapshot.hasError || !userSnapshot.hasData) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.error_outline, size: 48, color: Colors.red.shade400),
+                          SizedBox(height: 16),
+                          Text(
+                            'Lỗi: Không tìm thấy người dùng ${widget.userId}',
+                            style: TextStyle(
+                              color: Color(0xFF2C3E50),
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                      );
-                    }
+                        ],
+                      ),
+                    );
+                  }
 
-                    final chartData = chartSnapshot.data!;
-                    print("Bar Chart Data: ${chartData.length} tháng");
-                    for (var item in chartData) {
-                      print("${item.monthYear}: Thu: ${item.totalCredit}, Chi: ${item.totalDebit}");
-                    }
+                  final user = userSnapshot.data!;
+                  print("Đang tạo biểu đồ cho User: ${user.username} (ID: ${user.id})");
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 1),
+                  return FutureBuilder<List<ChartTransaction>>(
+                    future: _fetchChartData(),
+                    builder: (context, chartSnapshot) {
+                      if (chartSnapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(50.0),
+                            child: CircularProgressIndicator(
+                              color: Color(0xFF4285F4),
+                            ),
                           ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Tổng thu/chi các tháng gần đây',
+                        );
+                      }
+                      if (chartSnapshot.hasError) {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                              'Lỗi: ${chartSnapshot.error}',
+                              style: TextStyle(
+                                color: Color(0xFF2C3E50),
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      if (!chartSnapshot.hasData || chartSnapshot.data!.isEmpty) {
+                        return Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(50.0),
+                            child: Column(
+                              children: [
+                                Icon(Icons.info_outline, size: 48, color: Colors.grey.shade400),
+                                SizedBox(height: 16),
+                                Text(
+                                  'Chưa có giao dịch nào',
                                   style: TextStyle(
+                                    color: Color(0xFF2C3E50),
                                     fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 400,
-                                child: TransactionBarChart(
-                                  data: chartData,
-                                  currencyFormat: currencyFormat,
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+
+                      final chartData = chartSnapshot.data!;
+                      print("Bar Chart Data: ${chartData.length} tháng");
+                      for (var item in chartData) {
+                        print("${item.monthYear}: Thu: ${item.totalCredit}, Chi: ${item.totalDebit}");
+                      }
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  spreadRadius: 0,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 5),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 16.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.insights,
+                                        color: Color(0xFF4285F4),
+                                        size: 24,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Tổng thu/chi các tháng gần đây',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFF2C3E50),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 380,
+                                  child: TransactionBarChart(
+                                    data: chartData,
+                                    currencyFormat: currencyFormat,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 12.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _buildLegendItem('Khoản thu', Colors.green),
+                                      SizedBox(width: 24),
+                                      _buildLegendItem('Khoản chi', Colors.red),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          height: 200,
-                          child: CashFlow(
-                            remainingAmount: user.remainingAmount.toDouble(),
-                            totalCredit: user.totalCredit.toDouble(),
-                            totalDebit: user.totalDebit.toDouble(),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            child: CashFlow(
+                              remainingAmount: user.remainingAmount.toDouble(),
+                              totalCredit: user.totalCredit.toDouble(),
+                              totalDebit: user.totalDebit.toDouble(),
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
-          ],
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              onPressed: previousMonth,
-              icon: const Icon(Icons.arrow_back),
-              color: Colors.blueAccent,
-            ),
-            Text(
-              DateFormat('M/y').format(currentMonth),
-              style: const TextStyle(
-                color: Colors.blueAccent,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            IconButton(
-              onPressed: nextMonth,
-              icon: const Icon(Icons.arrow_forward),
-              color: Colors.blueAccent,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              spreadRadius: 0,
+              blurRadius: 10,
+              offset: Offset(0, -3),
             ),
           ],
         ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildMonthNavigationButton(
+                icon: Icons.arrow_back,
+                onPressed: previousMonth,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Color(0xFFE6F0FF),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  DateFormat('M/y').format(currentMonth),
+                  style: TextStyle(
+                    color: Color(0xFF4285F4),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              _buildMonthNavigationButton(
+                icon: Icons.arrow_forward,
+                onPressed: nextMonth,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLegendItem(String label, Color color) {
+    return Row(
+      children: [
+        Container(
+          width: 16,
+          height: 16,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(
+            color: Color(0xFF2C3E50),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMonthNavigationButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            spreadRadius: 0,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: IconButton(
+        onPressed: onPressed,
+        icon: Icon(icon),
+        color: Color(0xFF4285F4),
+        iconSize: 24,
       ),
     );
   }
@@ -278,6 +435,8 @@ class TransactionBarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double maxY = _calculateMaxY();
+    // Đảm bảo maxY chia hết cho 2 triệu để các mốc đẹp
+    maxY = (maxY / 2000000).ceil() * 2000000;
 
     return BarChart(
       BarChartData(
@@ -295,7 +454,11 @@ class TransactionBarChart extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   child: Text(
                     data[index].monthYear,
-                    style: const TextStyle(color: Colors.black, fontSize: 10),
+                    style: TextStyle(
+                      color: Color(0xFF2C3E50),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 );
               },
@@ -308,33 +471,61 @@ class TransactionBarChart extends StatelessWidget {
           topTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
-          rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
+          rightTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 60, // Tăng không gian cho số tiền
+              interval: 2000000, // Khoảng cách 2 triệu
+              getTitlesWidget: (value, meta) {
+                if (value < 0 || value > maxY) return const SizedBox();
+                return Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    currencyFormat.format(value),
+                    style: TextStyle(
+                      color: Color(0xFF2C3E50),
+                      fontSize: 12,
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ),
         borderData: FlBorderData(
           show: true,
-          border: Border.all(color: Colors.grey, width: 1),
+          border: Border.all(color: Colors.grey.shade200, width: 1),
         ),
-        gridData: const FlGridData(show: false),
+        gridData: FlGridData(
+          show: true,
+          drawVerticalLine: false,
+          horizontalInterval: 2000000, // Grid theo 2 triệu
+          getDrawingHorizontalLine: (value) {
+            return FlLine(
+              color: Colors.grey.shade200,
+              strokeWidth: 1,
+              dashArray: [5, 5],
+            );
+          },
+        ),
         barTouchData: BarTouchData(
           touchTooltipData: BarTouchTooltipData(
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               String monthYear = data[group.x.toInt()].monthYear;
               String label = rodIndex == 0 ? 'Thu' : 'Chi';
               return BarTooltipItem(
-                '$monthYear\n$label\n',
-                const TextStyle(
+                '$monthYear\n$label',
+                TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    text: currencyFormat.format(rod.toY),
-                    style: const TextStyle(
-                      color: Colors.yellow,
-                      fontSize: 14,
+                    text: '\n${currencyFormat.format(rod.toY)}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -354,7 +545,7 @@ class TransactionBarChart extends StatelessWidget {
       if (transaction.totalCredit > maxY) maxY = transaction.totalCredit;
       if (transaction.totalDebit > maxY) maxY = transaction.totalDebit;
     }
-    return maxY == 0 ? 1000000 : maxY;
+    return maxY == 0 ? 2000000 : maxY; // Đặt min 2 triệu nếu không có dữ liệu
   }
 
   List<BarChartGroupData> _buildBarGroups() {
@@ -363,20 +554,38 @@ class TransactionBarChart extends StatelessWidget {
       ChartTransaction transaction = entry.value;
       return BarChartGroupData(
         x: index,
+        groupVertically: false,
         barRods: [
           BarChartRodData(
             toY: transaction.totalCredit,
-            color: Colors.green,
-            width: 16,
-            borderRadius: BorderRadius.circular(2),
+            color: Colors.green.shade400,
+            width: 15,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(6),
+              topRight: Radius.circular(6),
+            ),
+            backDrawRodData: BackgroundBarChartRodData(
+              show: true,
+              toY: _calculateMaxY(),
+              color: Colors.grey.shade100,
+            ),
           ),
           BarChartRodData(
             toY: transaction.totalDebit,
-            color: Colors.red,
-            width: 16,
-            borderRadius: BorderRadius.circular(2),
+            color: Colors.red.shade400,
+            width: 15,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(6),
+              topRight: Radius.circular(6),
+            ),
+            backDrawRodData: BackgroundBarChartRodData(
+              show: true,
+              toY: _calculateMaxY(),
+              color: Colors.grey.shade100,
+            ),
           ),
         ],
+        barsSpace: 8,
       );
     }).toList();
   }
