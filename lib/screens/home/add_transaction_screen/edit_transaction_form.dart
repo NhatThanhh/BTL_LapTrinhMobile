@@ -147,7 +147,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
       await LocalDbService.instance.updateUser(updatedUser);
 
-      Navigator.pop(context);
+      Navigator.pop(context, true);
 
       setState(() {
         isLoader = false;

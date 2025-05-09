@@ -431,7 +431,14 @@ class TransactionBarChart extends StatelessWidget {
   final NumberFormat currencyFormat;
 
   const TransactionBarChart({super.key, required this.data, required this.currencyFormat});
-
+  String formatToMillions(double value) {
+    if (value >= 1000000) {
+      return '${(value / 1000000).toStringAsFixed(0)}M';
+    } else if (value >= 1000) {
+      return '${(value / 1000).toStringAsFixed(0)}K';
+    }
+    return value.toStringAsFixed(0);
+  }
   @override
   Widget build(BuildContext context) {
     double maxY = _calculateMaxY();
@@ -474,17 +481,17 @@ class TransactionBarChart extends StatelessWidget {
           rightTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 60, // Tăng không gian cho số tiền
+              reservedSize: 40, // Tăng không gian cho số tiền
               interval: 2000000, // Khoảng cách 2 triệu
               getTitlesWidget: (value, meta) {
                 if (value < 0 || value > maxY) return const SizedBox();
                 return Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
-                    currencyFormat.format(value),
+                    formatToMillions(value),
                     style: TextStyle(
                       color: Color(0xFF2C3E50),
-                      fontSize: 12,
+                      fontSize: 11,
                     ),
                   ),
                 );

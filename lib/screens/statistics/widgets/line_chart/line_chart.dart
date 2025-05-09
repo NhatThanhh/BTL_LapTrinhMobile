@@ -81,6 +81,17 @@ class _LineChartPageState extends State<LineChartPage> {
     print("Fetched ${dataPoints.length} data points for LineChart");
     return dataPoints;
   }
+  String formatToMillions(double value) {
+    final isNegative = value < 0;
+    final absValue = value.abs();
+
+    if (absValue >= 1000000) {
+      return '${isNegative ? '-' : ''}${(absValue / 1000000).toStringAsFixed(0)}M';
+    } else if (absValue >= 1000) {
+      return '${isNegative ? '-' : ''}${(absValue / 1000).toStringAsFixed(0)}K';
+    }
+    return value.toStringAsFixed(0);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -228,14 +239,14 @@ class _LineChartPageState extends State<LineChartPage> {
                       rightTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
-                          reservedSize: 60, // Không gian cho số tiền
+                          reservedSize: 40, // Không gian cho số tiền
                           interval: 1000000, // Khoảng cách 1 triệu
                           getTitlesWidget: (value, meta) {
                             if (value < minY || value > maxY) return const SizedBox();
                             return Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Text(
-                                currencyFormat.format(value),
+                                formatToMillions(value),
                                 style: const TextStyle(
                                   color: Color(0xFF2C3E50),
                                   fontSize: 12,

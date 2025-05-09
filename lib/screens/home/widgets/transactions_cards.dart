@@ -9,11 +9,12 @@ import 'package:money_management/screens/home/widgets/transaction_card.dart';
 class TransactionsCards extends StatelessWidget {
   final int userId;
   final GlobalKey<RecentTransactionListState> recentTransactionListKey; // Thêm key
-
+  final VoidCallback? onUserDataChanged;
   const TransactionsCards({
     super.key,
     required this.userId,
     required this.recentTransactionListKey,
+    this.onUserDataChanged,
   });
 
   @override
@@ -34,6 +35,7 @@ class TransactionsCards extends StatelessWidget {
           RecentTransactionList(
             key: recentTransactionListKey,
             userId: userId,
+            onUserDataChanged: onUserDataChanged,
           ),
         ],
       ),
@@ -43,8 +45,8 @@ class TransactionsCards extends StatelessWidget {
 
 class RecentTransactionList extends StatefulWidget {
   final int userId;
-
-  const RecentTransactionList({super.key, required this.userId});
+  final VoidCallback? onUserDataChanged;
+  const RecentTransactionList({super.key, required this.userId, this.onUserDataChanged,});
 
   @override
   State<RecentTransactionList> createState() => RecentTransactionListState();
@@ -99,6 +101,7 @@ class RecentTransactionListState extends State<RecentTransactionList> {
     await LocalDbService.instance.updateUser(updatedUser); // Sửa insertUser thành updateUser
     await LocalDbService.instance.deleteTransaction(id);
     await fetchTransactions();
+    widget.onUserDataChanged?.call();
   }
 
   void _showEditTransactionDialog(BuildContext context, TransactionModel transaction) {
@@ -110,7 +113,13 @@ class RecentTransactionListState extends State<RecentTransactionList> {
           transaction: transaction,
         ),
       ),
-    ).then((_) => fetchTransactions());
+    ).then((result) {
+      // Cập nhật danh sách giao dịch
+      fetchTransactions();
+
+      // Gọi callback để thông báo cho HomeScreen cập nhật HeroCard
+      widget.onUserDataChanged?.call();
+    });
   }
 
   @override

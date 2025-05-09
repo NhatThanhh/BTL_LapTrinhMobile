@@ -6,162 +6,131 @@ class AppIcons {
   final List<Map<String, dynamic>> homeExpensesCategories = [
     {
       'name': 'Thuê nhà',
-      'icon': FontAwesomeIcons.home,
+      'icon': 'assets/icons/house.png',
     },
     {
       'name': 'Tiện ích',
-      'icon': FontAwesomeIcons.lightbulb,
+      'icon': 'assets/icons/idea.png',
     },
     {
       'name': 'Mua sắm',
-      'icon': FontAwesomeIcons.shoppingCart,
+      'icon': 'assets/icons/trolley.png',
     },
     {
       'name': 'Phương tiện',
-      'icon': FontAwesomeIcons.bus,
+      'icon': 'assets/icons/bus.png',
     },
     {
       'name': 'Giải trí',
-      'icon': FontAwesomeIcons.film,
+      'icon': 'assets/icons/cinema.png',
     },
     {
       'name': 'Chăm sóc sức khỏe',
-      'icon': FontAwesomeIcons.heart,
+      'icon': 'assets/icons/healthcare.png',
     },
     {
       'name': 'Bảo hiểm',
-      'icon': FontAwesomeIcons.shieldHalved,
+      'icon': 'assets/icons/safety.png',
     },
     {
       'name': 'Tiết kiệm',
-      'icon': FontAwesomeIcons.piggyBank,
+      'icon': 'assets/icons/saving.png',
     },
     {
       'name': 'Ăn uống',
-      'icon': FontAwesomeIcons.utensils,
+      'icon': 'assets/icons/eat.png',
     },
     {
       'name': 'Giáo dục',
-      'icon': FontAwesomeIcons.graduationCap,
+      'icon': 'assets/icons/graduation.png',
     },
     {
       'name': 'Quà tặng',
-      'icon': FontAwesomeIcons.gift,
+      'icon': 'assets/icons/giftbox.png',
     },
     {
       'name': 'Du lịch',
-      'icon': FontAwesomeIcons.plane,
+      'icon': 'assets/icons/plane.png',
     },
     {
       'name': 'Nhiên liệu',
-      'icon': FontAwesomeIcons.gasPump,
+      'icon': 'assets/icons/fuel.png',
     },
     {
       'name': 'Quần áo',
-      'icon': FontAwesomeIcons.tshirt,
+      'icon': 'assets/icons/shirt.png',
     },
     {
       'name': 'Điện tử',
-      'icon': FontAwesomeIcons.mobileAlt,
+      'icon': 'assets/icons/smartphone.png',
     },
     {
       'name': 'Sách',
-      'icon': FontAwesomeIcons.book,
+      'icon': 'assets/icons/stack-of-books.png',
     },
     {
       'name': 'Thể thao',
-      'icon': FontAwesomeIcons.footballBall,
+      'icon': 'assets/icons/basketball.png',
     },
     {
       'name': 'Vật nuôi',
-      'icon': FontAwesomeIcons.paw,
+      'icon': 'assets/icons/pets.png',
     },
     {
       'name': 'Từ thiện',
-      'icon': FontAwesomeIcons.handsHelping,
+      'icon': 'assets/icons/love.png',
     },
     {
       'name': 'Đầu tư',
-      'icon': FontAwesomeIcons.chartLine,
-    },
-    {
-      'name': 'Âm nhạc',
-      'icon': FontAwesomeIcons.music,
-    },
-    {
-      'name': 'Sở thích',
-      'icon': FontAwesomeIcons.paintBrush,
+      'icon': 'assets/icons/growth.png',
     },
     {
       'name': 'Hóa đơn',
-      'icon': FontAwesomeIcons.fileInvoiceDollar,
-    },
-    {
-      'name': 'Phí',
-      'icon': FontAwesomeIcons.moneyCheck,
-    },
-    {
-      'name': 'Thuế',
-      'icon': FontAwesomeIcons.fileAlt,
+      'icon': 'assets/icons/bill.png',
     },
     {
       'name': 'Vay mượn',
-      'icon': FontAwesomeIcons.handshake,
+      'icon': 'assets/icons/salary.png',
     },
     {
       'name': 'Chăm sóc trẻ',
-      'icon': FontAwesomeIcons.baby,
+      'icon': 'assets/icons/baby.png',
     },
     {
       'name': 'Sửa nhà',
-      'icon': FontAwesomeIcons.hammer,
+      'icon': 'assets/icons/housee.png',
     },
     {
       'name': 'Phòng tập',
-      'icon': FontAwesomeIcons.dumbbell,
-    },
-    {
-      'name': 'Đăng ký',
-      'icon': FontAwesomeIcons.creditCard,
-    },
-    {
-      'name': 'Nghệ thuật',
-      'icon': FontAwesomeIcons.palette,
+      'icon': 'assets/icons/gym.png',
     },
     {
       'name': 'Làm đẹp',
-      'icon': FontAwesomeIcons.spa,
+      'icon': 'assets/icons/massage.png',
     },
     {
       'name': 'Vệ sinh',
-      'icon': FontAwesomeIcons.broom,
-    },
-    {
-      'name': 'Vé',
-      'icon': FontAwesomeIcons.ticketAlt,
+      'icon': 'assets/icons/broom.png',
     },
     {
       'name': 'Đám cưới',
-      'icon': FontAwesomeIcons.ring,
+      'icon': 'assets/icons/couple.png',
     },
     {
       'name': 'Tiệc tùng',
-      'icon': FontAwesomeIcons.cocktail,
-    },
-    {
-      'name': 'Cấp cứu',
-      'icon': FontAwesomeIcons.firstAid,
+      'icon': 'assets/icons/party-popper.png',
     },
     {
       'name': 'Khác',
-      'icon': FontAwesomeIcons.ellipsis,
+      'icon': 'assets/icons/ellipsis.png',
     },
   ];
 
-  IconData getExpenseCategoryIcons(String categoryName) {
+  String getExpenseCategoryIcons(String categoryName) {
     final category = homeExpensesCategories.firstWhere(
-        (category) => category['name'] == categoryName,
-        orElse: () => {"icon": FontAwesomeIcons.ellipsis});
-    return category['icon'];
+          (category) => category['name'] == categoryName,
+      orElse: () => {'icon': 'assets/icons/default.png'},
+    );
+    return category['icon'] as String;
   }
 }

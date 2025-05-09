@@ -78,17 +78,21 @@ class TransactionCard extends StatelessWidget {
                   width: 70,
                   alignment: Alignment.center,
                   child: Container(
-                    width: 30,
-                    height: 30,
+                    width: 55,
+                    height: 55,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(20),
                       color: amountColor.withOpacity(0.2),
                     ),
                     child: Center(
-                      child: FaIcon(
+                      child: Image.asset(
                         appIcons.getExpenseCategoryIcons(categoryName),
-                        color: amountColor,
-                        size: 16,
+                        width: 40,
+                        height: 40,
+                        errorBuilder: (context, error, stackTrace) => const Icon(
+                          Icons.error,
+                          size: 40,
+                        ),
                       ),
                     ),
                   ),

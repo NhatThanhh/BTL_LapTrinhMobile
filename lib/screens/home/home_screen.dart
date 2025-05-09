@@ -4,9 +4,10 @@ import 'package:money_management/screens/home/widgets/transactions_cards.dart';
 import 'package:money_management/screens/home/widgets/hero_card.dart';
 import '../../../models/local_db_service.dart';
 import '../../../models/user_model.dart';
+
 class HomeScreen extends StatefulWidget {
   final int userId;
-  final VoidCallback? onTransactionAdded; // Callback từ Dashboard
+  final VoidCallback? onTransactionAdded;
   const HomeScreen({super.key, required this.userId, this.onTransactionAdded});
 
   @override
@@ -16,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   UserModel? currentUser;
   final recentTransactionListKey = GlobalKey<RecentTransactionListState>(); // Thêm key
+
   @override
   void initState() {
     super.initState();
@@ -23,16 +25,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadCurrentUser() async {
-    // Nếu bạn đang có email login => truyền vào đây
     final user = await LocalDbService().getUserById(widget.userId);
     setState(() {
       currentUser = user;
     });
   }
+
   void fetchTransactions() {
     recentTransactionListKey.currentState?.fetchTransactions();
     _loadCurrentUser(); // Làm mới HeroCard
   }
+
   void _dialogBuilder(BuildContext context) {
     showDialog(
       context: context,
@@ -81,13 +84,32 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: currentUser == null
           ? const Center(child: CircularProgressIndicator()) // Đợi load user
-          : SingleChildScrollView(
-        child: Column(
-          children: [
-            HeroCard(user: currentUser!), // Đảm bảo userId là String
-            TransactionsCards(userId: widget.userId, recentTransactionListKey: recentTransactionListKey,),
-          ],
-        ),
+          : Stack(
+        children: [
+          // Nội dung cuộn
+          SingleChildScrollView(
+            padding: const EdgeInsets.only(top: 240.0), // Dành không gian cho HeroCard
+            child: Column(
+              children: [
+                TransactionsCards(
+                  userId: widget.userId,
+                  recentTransactionListKey: recentTransactionListKey,
+                  onUserDataChanged: () {
+                    // Cập nhật lại dữ liệu người dùng để làm mới HeroCard
+                    _loadCurrentUser();
+                  },
+                ),
+              ],
+            ),
+          ),
+          // HeroCard cố định trên cùng
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: HeroCard(user: currentUser!), // Đảm bảo userId là String
+          ),
+        ],
       ),
     );
   }
