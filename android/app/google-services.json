@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "744829665405",
+    "project_id": "btlmoneymanagement",
+    "storage_bucket": "btlmoneymanagement.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744829665405:android:183449fa13856c656f3114",
+        "android_client_info": {
+          "package_name": "com.example.btl_quanlychitieu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744829665405-a2302oc037fdel21hamrs7dbrl7bf1pq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.btl_quanlychitieu",
+            "certificate_hash": "abc0967c4793fe0b1361580b2a02198ed1d78575"
+          }
+        },
+        {
+          "client_id": "744829665405-3kdkcnf03kdclfbkhi3mvaim18adngs2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYwGgvcGLhHEBM8tz5TqHYCaa2G263U9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744829665405-3kdkcnf03kdclfbkhi3mvaim18adngs2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744829665405-3gd7cggjrees06ri50brc7khlc9vgeob.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.btlQuanlychitieu"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
