@@ -17,7 +17,7 @@ class AppIcons {
       'icon': 'assets/icons/trolley.png',
     },
     {
-      'name': 'Phương tiện',
+      'name': 'Đi lại',
       'icon': 'assets/icons/bus.png',
     },
     {
@@ -25,7 +25,7 @@ class AppIcons {
       'icon': 'assets/icons/cinema.png',
     },
     {
-      'name': 'Chăm sóc sức khỏe',
+      'name': 'Sức khỏe',
       'icon': 'assets/icons/healthcare.png',
     },
     {
@@ -93,7 +93,7 @@ class AppIcons {
       'icon': 'assets/icons/salary.png',
     },
     {
-      'name': 'Chăm sóc trẻ',
+      'name': 'Con cái',
       'icon': 'assets/icons/baby.png',
     },
     {

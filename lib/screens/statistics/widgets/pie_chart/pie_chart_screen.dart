@@ -214,13 +214,7 @@ class _PieChartScreenState extends State<PieChartScreen> {
     final currencyFormat = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Biểu đồ chia theo danh mục',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -233,14 +227,13 @@ class _PieChartScreenState extends State<PieChartScreen> {
                   margin: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: selectedType == 'credit'
-                        ? Colors.amber
-                        : Colors.grey[300],
+                        ? Color(0xFF4387CC)
+                        : Color(0xFF90CAF9),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: IconButton(
                     icon: Icon(Icons.monetization_on),
-                    color:
-                    selectedType == 'credit' ? Colors.white : Colors.black,
+                    color: Colors.white,
                     onPressed: switchToCredit,
                     tooltip: 'Hiển thị biểu đồ thanh toán',
                   ),
@@ -249,14 +242,13 @@ class _PieChartScreenState extends State<PieChartScreen> {
                   margin: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: selectedType == 'debit'
-                        ? Colors.amber
-                        : Colors.grey[300],
+                        ? Color(0xFF4387CC)
+                        : Color(0xFF90CAF9),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: IconButton(
                     icon: Icon(Icons.money_off),
-                    color:
-                    selectedType == 'debit' ? Colors.white : Colors.black,
+                    color: Colors.white,
                     onPressed: switchToDebit,
                     tooltip: 'Hiển thị biểu đồ thu nhập',
                   ),

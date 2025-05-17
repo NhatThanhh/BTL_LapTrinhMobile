@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../utils/icons_list.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import '../add_transaction_screen/edit_transaction_form.dart';
 class TransactionDetailsScreen extends StatelessWidget {
   final dynamic data;
 
@@ -239,76 +241,10 @@ class TransactionDetailsScreen extends StatelessWidget {
             ),
 
             SizedBox(height: 30),
-
-            // Section: Lựa chọn
-            Text(
-              'Lựa chọn',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
-
-            SizedBox(height: 16),
-
-            // Actions card
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // Edit button
-                  Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 35,
-                        backgroundColor: Colors.green,
-                        child: IconButton(
-                          icon: Icon(Icons.edit, color: Colors.white, size: 28),
-                          onPressed: () {
-                            // Giữ nguyên chức năng hiện tại
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'Sửa',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
-                  ),
-
-                  // Delete button
-                  Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 35,
-                        backgroundColor: Colors.red,
-                        child: IconButton(
-                          icon: Icon(Icons.delete, color: Colors.white, size: 28),
-                          onPressed: () {
-                            // Giữ nguyên chức năng hiện tại
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'Xóa',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 }
+

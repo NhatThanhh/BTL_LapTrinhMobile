@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:btl_quanlychitieu/screens/home/add_transaction_screen/add_transaction_form.dart';
 import 'package:btl_quanlychitieu/screens/home/widgets/transactions_cards.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:btl_quanlychitieu/screens/transactions/transactions_screen.dart';
 import 'widgets/hero_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,16 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
   User? user;
 
   Map<String, dynamic>? userData;
-
-  _dialogBuilder(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: AddTransactionForm(),
-          );
-        });
-  }
 
   @override
   void initState() {
@@ -54,19 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // Đặt màu nền là trắng
       resizeToAvoidBottomInset: false,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          _dialogBuilder(context);
-        },
-        icon: Icon(Icons.add),
-        label: Text("Thêm"),
-        backgroundColor: Colors.blueAccent.shade100,
-      ),
-      // Thu nhỏ AppBar bằng cách giảm kích thước và sử dụng PreferredSize
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(20), // Giảm chiều cao của AppBar
+        preferredSize: Size.fromHeight(-20), // Giảm chiều cao của AppBar
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
@@ -83,86 +62,78 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          actions: [
-            // Giảm khoảng cách giữa các phần tử
-            Padding(
-              padding: const EdgeInsets.only(right: 4.0),
-              child: StreamBuilder<DocumentSnapshot>(
-                stream: _firestore.collection('users').doc(user!.uid).snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
-                    return CircleAvatar(
-                      radius: 30, // Giảm kích thước avatar
-                      backgroundImage: AssetImage('assets/profile_picture.png'),
-                    );
-                  }
-
-                  var userData = snapshot.data!.data() as Map<String, dynamic>;
-
-                  return CircleAvatar(
-                    radius: 30, // Giảm kích thước avatar
-                    backgroundImage: userData['avatarUrl'] != null
-                        ? NetworkImage(userData['avatarUrl'])
-                        : AssetImage('assets/profile_picture.png') as ImageProvider,
-                  );
-                },
-              ),
-            ),
-          ],
         ),
       ),
       body: userData == null
           ? Center(child: CircularProgressIndicator())
-          : Column(
-        children: [
-          // HeroCard được giữ nguyên nhưng đã có không gian nhiều hơn vì AppBar đã được thu nhỏ
-          HeroCard(userId: userId),
-          // Thêm một đường phân cách nhỏ
-          Divider(height: 1, thickness: 0.5, color: Colors.grey.shade300),
-          // Thêm tiêu đề cho phần giao dịch
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Giao dịch gần đây",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+          : SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 16), // Giảm khoảng cách dưới vì không còn FloatingActionButton
+          child: Column(
+            children: [
+              // HeroCard
+              HeroCard(userId: userId),
+              SizedBox(height: 2), // Giảm khoảng cách giữa HeroCard và khung giao dịch
+
+              // Phần giao dịch gần đây được bọc trong một khung
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      // Tiêu đề "Giao dịch gần đây" và nút "Xem tất cả" nằm sát viền trên của khung
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Giao dịch gần đây",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Chuyển tab đến TransactionsScreen (index = 2) trong Dashboard
+                                if (widget.onTabChange != null) {
+                                  widget.onTabChange!(2); // Gọi callback để thay đổi tab
+                                }
+                              },
+                              child: Text(
+                                "Xem tất cả",
+                                style: TextStyle(
+                                  color: Colors.blue.shade600,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                minimumSize: Size(0, 0),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(height: 1, thickness: 0.5, color: Colors.grey.shade200),
+                      // Phần danh sách giao dịch
+                      Expanded(
+                        child: TransactionsCards(),
+                      ),
+                    ],
                   ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    // Chuyển tab đến TransactionsScreen (index = 2) trong Dashboard
-                    if (widget.onTabChange != null) {
-                      widget.onTabChange!(2); // Gọi callback để thay đổi tab
-                    }
-                  },
-                  child: Text(
-                    "Xem tất cả",
-                    style: TextStyle(
-                      color: Colors.blue.shade600,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: Size(0, 0),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          // Phần danh sách giao dịch
-          Expanded(
-            child: SingleChildScrollView(
-              child: TransactionsCards(),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

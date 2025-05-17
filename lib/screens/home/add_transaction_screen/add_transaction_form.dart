@@ -26,7 +26,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   var uid = Uuid();
   DateTime? _selectedDate = DateTime.now();
 
-  final currencyFormat = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
+  final currencyFormat = NumberFormat.decimalPattern('vi_VN');
   final Color primaryColor = Color(0xFF4285F4);
   final Color creditColor = Color(0xFF34A853);
   final Color debitColor = Color(0xFFEA4335);
@@ -77,10 +77,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     }
 
     int amount = int.parse(text);
-    // Định dạng tiền tệ và bỏ phần thập phân
-    String formattedAmount = currencyFormat.format(amount).split(',')[0];
-
-    // Cập nhật text field với vị trí con trỏ phù hợp
+    String formattedAmount = currencyFormat.format(amount);
     amountEditController.value = TextEditingValue(
       text: formattedAmount,
       selection: TextSelection.collapsed(offset: formattedAmount.length),

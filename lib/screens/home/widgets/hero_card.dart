@@ -101,8 +101,7 @@ class Cards extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
-            blurRadius: 5,
-            offset: Offset(0, 2),
+            blurRadius: 1,
           ),
         ],
       ),
@@ -152,6 +151,7 @@ class Cards extends StatelessWidget {
                           "Số dư hiện tại",
                           style: TextStyle(
                             fontSize: 14,
+                            fontWeight: FontWeight.bold,
                             color: Colors.white.withOpacity(0.9),
                           ),
                         ),

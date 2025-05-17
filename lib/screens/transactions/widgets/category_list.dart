@@ -19,6 +19,10 @@ class _CategoryListState extends State<CategoryList> {
 
   final AppIcons appIcons = AppIcons();
 
+  // Màu pastel blue từ TimeLineMonth
+  final Color pastelBlue = const Color(0xFF90CAF9);
+  final Color pastelBlueDark = const Color(0xFF64B5F6);
+
   @override
   void initState() {
     super.initState();
@@ -39,9 +43,9 @@ class _CategoryListState extends State<CategoryList> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.amber,
+              color: pastelBlue.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.amber.shade700),
+              border: Border.all(color: pastelBlue.withOpacity(0.3)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -56,29 +60,29 @@ class _CategoryListState extends State<CategoryList> {
                     return Icon(
                       FontAwesomeIcons.cartPlus,
                       size: 16,
-                      color: Colors.black,
+                      color: pastelBlueDark,
                     );
                   },
                 )
                     : Icon(
                   FontAwesomeIcons.cartPlus,
                   size: 16,
-                  color: Colors.black,
+                  color: pastelBlueDark,
                 ),
                 SizedBox(width: 8),
                 // Hiển thị tên danh mục hiện tại
                 Text(
                   currentCategory,
                   style: TextStyle(
-                    color: Colors.black,
+                    color: pastelBlueDark,
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 SizedBox(width: 4),
                 Icon(
-                  Icons.arrow_drop_down,
-                  color: Colors.black,
+                  Icons.keyboard_arrow_down,
+                  color: pastelBlueDark,
                   size: 20,
                 ),
               ],
@@ -131,11 +135,11 @@ class _CategoryListState extends State<CategoryList> {
                       padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                       decoration: BoxDecoration(
                         color: "Tất cả" == currentCategory
-                            ? Colors.amber.withOpacity(0.2)
+                            ? pastelBlue.withOpacity(0.3)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
                         border: "Tất cả" == currentCategory
-                            ? Border.all(color: Colors.amber.shade700)
+                            ? Border.all(color: pastelBlueDark)
                             : null,
                       ),
                       child: Row(
@@ -144,7 +148,7 @@ class _CategoryListState extends State<CategoryList> {
                             FontAwesomeIcons.cartPlus,
                             size: 20,
                             color: "Tất cả" == currentCategory
-                                ? Colors.amber.shade800
+                                ? Colors.black
                                 : Color(0xFF2C3E50),
                           ),
                           SizedBox(width: 12),
@@ -153,7 +157,7 @@ class _CategoryListState extends State<CategoryList> {
                             style: TextStyle(
                               fontSize: 16,
                               color: "Tất cả" == currentCategory
-                                  ? Colors.amber.shade800
+                                  ? Colors.black
                                   : Color(0xFF2C3E50),
                               fontWeight: "Tất cả" == currentCategory
                                   ? FontWeight.bold
@@ -195,11 +199,11 @@ class _CategoryListState extends State<CategoryList> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? Colors.amber.withOpacity(0.2)
+                                  ? pastelBlue.withOpacity(0.3)
                                   : Colors.transparent,
                               borderRadius: BorderRadius.circular(8),
                               border: isSelected
-                                  ? Border.all(color: Colors.amber.shade700)
+                                  ? Border.all(color: pastelBlueDark)
                                   : null,
                             ),
                             child: Column(
@@ -222,7 +226,7 @@ class _CategoryListState extends State<CategoryList> {
                                   name,
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: isSelected ? Colors.amber.shade800 : Color(0xFF2C3E50),
+                                    color: isSelected ? Colors.black : Color(0xFF2C3E50),
                                     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                                   ),
                                   textAlign: TextAlign.center,

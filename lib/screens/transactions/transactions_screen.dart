@@ -19,6 +19,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   bool isSearching = false;
   TextEditingController searchController = TextEditingController();
   String currentType = "Tất cả"; // Loại giao dịch hiện tại
+  String searchQuery = "";
 
   final List<Map<String, String>> typeOptions = [
     {'name': 'Tất cả', 'value': 'all'},
@@ -26,7 +27,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     {'name': 'Chi', 'value': 'debit'},
   ];
 
-  // Màu pastel blue từ TimeLineMonth
   final Color pastelBlue = const Color(0xFF90CAF9);
   final Color pastelBlueDark = const Color(0xFF64B5F6);
 
@@ -37,7 +37,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     monthYear = DateFormat('M/y').format(now);
   }
 
-  // Hiển thị dialog chọn loại giao dịch
+  // Chọn loi giao dịch
   void _showTypeDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -145,12 +145,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     setState(() {
       isSearching = false;
       searchController.clear();
+      searchQuery = "";
     });
   }
 
   void _searchTransactions(String query) {
-    print("Searching for: $query");
+    setState(() {
+      searchQuery = query; // giá trị tìm kiếm
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -160,30 +164,26 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       'Chi' => 'debit',
       _ => 'all',
     };
-
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _dialogBuilder(context),
-        backgroundColor: Colors.blueAccent.shade100,
-        child: const Icon(Icons.add),
-      ),
+      backgroundColor: Colors.white,
       appBar: AppBar(
+
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.blueAccent.shade100,
+        backgroundColor: Colors.white,
         title: isSearching
             ? TextField(
           controller: searchController,
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.black),
           decoration: const InputDecoration(
-            hintText: "Search transactions...",
-            hintStyle: TextStyle(color: Colors.white),
+            hintText: "Tìm kiếm",
+            hintStyle: TextStyle(color: Colors.black),
             border: InputBorder.none,
           ),
           onChanged: _searchTransactions,
         )
             : const Text(
           "Giao dịch",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
@@ -194,7 +194,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
       body: Column(
         children: [
-          // Cụm tùy chọn tĩnh: TimeLineMonth, CategoryList, nút chọn loại
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
             child: Row(
@@ -213,20 +212,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   ),
                 ),
                 const SizedBox(width: 4),
-                // CategoryList
-                Flexible(
-                  flex: 3,
-                  fit: FlexFit.tight,
-                  child: CategoryList(
-                    onChanged: (String? value) {
-                      if (value != null) {
-                        setState(() => category = value);
-                      }
-                    },
-                  ),
-                ),
-                const SizedBox(width: 4),
-                // Nút chọn loại giao dịch
                 Flexible(
                   flex: 2,
                   fit: FlexFit.tight,
@@ -256,7 +241,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           const SizedBox(width: 2),
                           Icon(
                             Icons.keyboard_arrow_down,
-                            size: 18,
+                            size: 12,
                             color: pastelBlueDark,
                           ),
                         ],
@@ -264,16 +249,29 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     ),
                   ),
                 ),
+                // CategoryList
+                Flexible(
+                  flex: 4,
+                  fit: FlexFit.tight,
+                  child: CategoryList(
+                    onChanged: (String? value) {
+                      if (value != null) {
+                        setState(() => category = value);
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 4),
               ],
             ),
           ),
           const Divider(height: 1),
-          // TransactionList cuộn độc lập
           Expanded(
             child: TransactionList(
               category: category,
               monthYear: monthYear,
               type: transactionType,
+              searchQuery: searchQuery, // Truyền giá trị tìm kiếm
             ),
           ),
         ],

@@ -85,7 +85,7 @@ class _TimeLineMonthState extends State<TimeLineMonth> {
                 const Text(
                   'Chọn tháng',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF2C3E50),
                   ),
@@ -182,7 +182,7 @@ class _TimeLineMonthState extends State<TimeLineMonth> {
             Text(
               formatMonthDisplay(currentMonth),
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: pastelBlueDark,
               ),
@@ -190,7 +190,7 @@ class _TimeLineMonthState extends State<TimeLineMonth> {
             SizedBox(width: 4),
             Icon(
               Icons.keyboard_arrow_down,
-              size: 20,
+              size: 12,
               color: pastelBlueDark,
             ),
           ],

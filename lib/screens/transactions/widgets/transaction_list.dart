@@ -13,13 +13,13 @@ class TransactionList extends StatelessWidget {
     required this.category,
     required this.type,
     required this.monthYear,
+    required this.searchQuery,
   });
-
   final userId = FirebaseAuth.instance.currentUser!.uid;
-
   final String category;
   final String type;
   final String monthYear;
+  final String searchQuery;
 
   @override
   Widget build(BuildContext context) {
@@ -41,22 +41,35 @@ class TransactionList extends StatelessWidget {
       query = query.where('category', isEqualTo: category);
     }
 
-    return FutureBuilder<QuerySnapshot>(
-      future: query.limit(150).get(),
+    return StreamBuilder<QuerySnapshot>(
+      stream: query.limit(150).snapshots(), // Thay get() bằng snapshots()
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text('Đã xảy ra lỗi');
+          return Text('Lỗi: ${snapshot.error}');
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return Text("Đang tải...");
         } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(child: Text('Không tìm thấy giao dịch nào.'));
         }
-        var data = snapshot.data!.docs;
+
+        var data = snapshot.data!.docs; // Lấy dữ liệu từ Firestore
+        List<QueryDocumentSnapshot> filteredData = data.where((doc) {
+          var transaction = doc.data() as Map<String, dynamic>;
+          String title = transaction['title']?.toString().toLowerCase() ?? '';
+          String category = transaction['category']?.toString().toLowerCase() ?? '';
+          String search = searchQuery.toLowerCase();
+          return title.contains(search) || category.contains(search);
+        }).toList();
+
+        if (filteredData.isEmpty && searchQuery.isNotEmpty) {
+          return const Center(child: Text('Không tìm thấy giao dịch nào khớp với tìm kiếm.'));
+        }
+
         return ListView.builder(
           shrinkWrap: true,
-          itemCount: data.length,
+          itemCount: filteredData.length,
           itemBuilder: (context, index) {
-            var cardData = data[index];
+            var cardData = filteredData[index];
             var transactionId = cardData.id;
 
             return Slidable(

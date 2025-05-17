@@ -53,14 +53,16 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent.shade100,
+        backgroundColor: Colors.white,
         title: Center(
           child: Text("Sửa thông tin cá nhân",
-              style: TextStyle(color: Colors.white)),
+              style: TextStyle(color: Colors.black)),
         ),
       ),
-      body: userData == null
+      body:
+        userData == null
           ? Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
@@ -112,7 +114,7 @@ class _EditProfileState extends State<EditProfile> {
                         context, user!, _refreshData),
                     child: const Text(
                       'Đổi mật khẩu',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
                     ),
                   ),
                   SizedBox(height: 16.0),
@@ -121,7 +123,7 @@ class _EditProfileState extends State<EditProfile> {
                         context, user!, _refreshData),
                     child: Text(
                       'Làm mới dữ liệu',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
                     ),
                   ),
                 ],

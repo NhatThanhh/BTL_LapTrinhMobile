@@ -7,10 +7,11 @@ class TypeTabBar extends StatefulWidget {
     required this.category,
     required this.monthYear,
     required String searchQuery,
-  }) : super(key: key);
+  }): searchQuery = searchQuery, super(key: key);
 
   final String category;
   final String monthYear;
+  final String searchQuery;
 
   @override
   State<TypeTabBar> createState() => _TypeTabBarState();
@@ -176,6 +177,7 @@ class _TypeTabBarState extends State<TypeTabBar> {
               category: widget.category,
               monthYear: widget.monthYear,
               type: transactionType,
+              searchQuery: widget.searchQuery,
             ),
           ),
         ],

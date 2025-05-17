@@ -50,23 +50,8 @@ class _LineChartPageState extends State<LineChartPage> {
     final userId = user.uid;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Biểu đồ tài chính',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2C3E50)),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      backgroundColor: Colors.white,
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFEAF2FD), Colors.white],
-            stops: [0.0, 0.7],
-          ),
-        ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: StreamBuilder<QuerySnapshot>(
@@ -117,10 +102,12 @@ class _LineChartPageState extends State<LineChartPage> {
                 );
               }
 
-              // Build data points and labels
+              // Xây dựng các điểm dữ liệu và nhãn
               final List<FlSpot> dataPoints = [];
               final Map<double, String> labels = {};
+              final List<Map<String, dynamic>> transactions = [];
 
+              // Thu thập dữ liệu giao dịch
               for (var doc in docs) {
                 final data = doc.data()! as Map<String, dynamic>;
                 final timestamp = data['timestamp'] as num? ?? 0;
@@ -128,15 +115,30 @@ class _LineChartPageState extends State<LineChartPage> {
                 final monthYear = data['monthyear'] as String? ?? '';
 
                 if (remaining != null) {
-                  final x = timestamp.toDouble();
-                  dataPoints.add(FlSpot(x, remaining));
-                  labels[x] = '${currencyFormat.format(remaining)}\n$monthYear';
+                  transactions.add({
+                    'timestamp': timestamp,
+                    'remaining': remaining,
+                    'monthYear': monthYear,
+                  });
                 }
               }
 
-              dataPoints.sort((a, b) => a.x.compareTo(b.x));
+              // Sắp xếp các giao dịch theo thời gian (tăng dần)
+              transactions.sort((a, b) => (a['timestamp'] as num).compareTo(b['timestamp'] as num));
 
-              // Calculate minY and maxY with padding
+              // Tạo vị trí x có khoảng cách đều nhau
+              for (int i = 0; i < transactions.length; i++) {
+                // Sử dụng chỉ số làm tọa độ x để tạo khoảng cách đều nhau
+                final x = i.toDouble();
+                final remaining = transactions[i]['remaining'] as double;
+                final monthYear = transactions[i]['monthYear'] as String;
+                final timestamp = transactions[i]['timestamp'] as num;
+
+                dataPoints.add(FlSpot(x, remaining));
+                labels[x] = '${currencyFormat.format(remaining)}\n$monthYear';
+              }
+
+              // Tính toán minY và maxY với phần đệm
               double minY = dataPoints.map((e) => e.y).reduce((a, b) => a < b ? a : b);
               double maxY = dataPoints.map((e) => e.y).reduce((a, b) => a > b ? a : b);
               minY = (minY / 1e6).floor() * 1e6 - 1e6;
@@ -147,7 +149,6 @@ class _LineChartPageState extends State<LineChartPage> {
               }
 
               return Container(
-                height: 350,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -175,16 +176,26 @@ class _LineChartPageState extends State<LineChartPage> {
                         LineChartData(
                           gridData: FlGridData(
                             show: true,
-                            drawVerticalLine: false,
+                            drawVerticalLine: true,
                             horizontalInterval: 1e6,
+                            verticalInterval: 1,
                             getDrawingHorizontalLine: (_) => FlLine(
+                              color: Colors.grey.shade200,
+                              strokeWidth: 1,
+                              dashArray: [5, 5],
+                            ),
+                            getDrawingVerticalLine: (_) => FlLine(
                               color: Colors.grey.shade200,
                               strokeWidth: 1,
                               dashArray: [5, 5],
                             ),
                           ),
                           titlesData: FlTitlesData(
-                            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: false,
+                              ),
+                            ),
                             leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                             rightTitles: AxisTitles(
@@ -235,8 +246,8 @@ class _LineChartPageState extends State<LineChartPage> {
                               ),
                             ),
                           ],
-                          minX: dataPoints.first.x,
-                          maxX: dataPoints.last.x,
+                          minX: 0,
+                          maxX: dataPoints.isEmpty ? 0 : dataPoints.length - 1,
                           minY: minY,
                           maxY: maxY,
                           lineTouchData: LineTouchData(

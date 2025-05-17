@@ -1,3 +1,4 @@
+import 'package:btl_quanlychitieu/screens/home/add_transaction_screen/add_transaction_form.dart';
 import 'package:btl_quanlychitieu/screens/home/home_screen.dart';
 import 'package:btl_quanlychitieu/screens/profile/profile_screen.dart';
 import 'package:btl_quanlychitieu/screens/statistics/statistics_screen.dart';
@@ -16,18 +17,26 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   var isLogoutLoading = false;
   int currentIndex = 0;
-  final List<Widget> pageViewList = [
-    HomeScreen(),
-    StatisticsScreen(),
-    TransactionsScreen(),
-    ProfileScreen(),
-  ];
+
   // Hàm chuyển tab
   void changeTab(int index) {
     setState(() {
       currentIndex = index;
     });
   }
+
+  // Hàm hiển thị dialog thêm giao dịch
+  void _showAddTransactionDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: AddTransactionForm(),
+          );
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Danh sách các màn hình với HomeScreen nhận callback
@@ -37,6 +46,7 @@ class _DashboardState extends State<Dashboard> {
       TransactionsScreen(),
       ProfileScreen(),
     ];
+
     return Scaffold(
       bottomNavigationBar: Navbar(
         selectedIndex: currentIndex,
@@ -45,6 +55,7 @@ class _DashboardState extends State<Dashboard> {
             currentIndex = value;
           });
         },
+        onAddButtonPressed: () => _showAddTransactionDialog(context),
       ),
       body: IndexedStack(
         index: currentIndex,

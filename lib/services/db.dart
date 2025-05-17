@@ -19,7 +19,6 @@ class Db {
       _showErrorDialog(context, "Đăng ký thất bại", error.toString());
     }
   }
-
   void _showErrorDialog(BuildContext context, String title, String message) {
     showDialog(
       context: context,

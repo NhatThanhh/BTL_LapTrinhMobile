@@ -18,9 +18,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   final List<String> categories = [
     'Tài chính',
-    'Danh mục',
     'Dòng tiền',
+    'Danh mục',
   ];
+
+  // Màu blue pastel từ time_line_month.dart
+  final Color pastelBlue = const Color(0xFF90CAF9);
+  final Color pastelBlueDark = const Color(0xFF64B5F6);
 
   void previousMonth() {
     setState(() {
@@ -38,81 +42,72 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   Widget build(BuildContext context) {
     final List<Widget> chartWidgets = [
       LineChartPage(),
-      PieChartScreen(),
-      BarChartScreen()
+      BarChartScreen(),
+      PieChartScreen()
     ];
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.blueAccent.shade100,
-        title:
-            Text("Thống kê giao dịch", style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: Text(
+          "Thống kê",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        titleSpacing: 0,
+        toolbarHeight: 56,
       ),
       body: Column(
         children: [
-          // Thanh cuộn ngang
-          Container(
-            height: 50, // Độ cao của thanh cuộn
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
-                  },
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    margin: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color:
-                          _selectedIndex == index ? Colors.amber : Colors.grey,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      categories[index],
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                );
-              },
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (int index = 0; index < categories.length; index++)
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = index;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                          margin: EdgeInsets.symmetric(horizontal: 4.0),
+                          decoration: BoxDecoration(
+                            color: _selectedIndex == index
+                                ? Color(0xFF5CA6E1)
+                                : Color(0xFF90CAF9),
+                            borderRadius: BorderRadius.circular(15),
+                            border: _selectedIndex == index
+                                ? Border.all(color: pastelBlueDark)
+                                : null,
+                          ),
+                          child: Text(
+                            categories[index],
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
           ),
           Expanded(
-            child: chartWidgets[
-                _selectedIndex], // Hiển thị biểu đồ tương ứng với mục được chọn
+            child: chartWidgets[_selectedIndex], // Hiển thị biểu đồ tương ứng với mục được chọn
           ),
         ],
       ),
-      // bottomNavigationBar: BottomAppBar(
-      //   color: Colors.white,
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //     children: [
-      //       IconButton(
-      //         onPressed: previousMonth,
-      //         icon: Icon(Icons.arrow_back),
-      //         color: Colors.blueAccent,
-      //       ),
-      //       Text(
-      //         DateFormat.yMMM().format(currentMonth),
-      //         style: TextStyle(
-      //           color: Colors.blueAccent,
-      //           fontWeight: FontWeight.bold,
-      //         ),
-      //       ),
-      //       IconButton(
-      //         onPressed: nextMonth,
-      //         icon: Icon(Icons.arrow_forward),
-      //         color: Colors.blueAccent,
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }

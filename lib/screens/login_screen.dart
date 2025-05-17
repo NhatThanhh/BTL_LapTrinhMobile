@@ -207,7 +207,7 @@ class _LoginViewState extends State<LoginView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Bạn là người sử dụng mới? ",
+                        "Chưa có tài khoản? ",
                         style: TextStyle(fontSize: 15, color: Colors.grey.shade700),
                       ),
                       TextButton(

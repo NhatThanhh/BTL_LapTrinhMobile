@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:btl_quanlychitieu/screens/profile/about.dart';
 import 'package:btl_quanlychitieu/screens/profile/edit_profile.dart';
-import 'package:btl_quanlychitieu/screens/profile/settings.dart';
 import 'package:btl_quanlychitieu/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -132,9 +130,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Center(
+
           child: Text(
             'Thông tin cá nhân',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -215,31 +216,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   },
                 ),
-                ProfileOption(
-                  icon: Icons.settings,
-                  title: 'Cài đặt',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsPage()),
-                    );
-                  },
-                ),
-                ProfileOption(
-                  icon: Icons.help,
-                  title: 'Hỗ trợ',
-                  onTap: () {},
-                ),
-                ProfileOption(
-                  icon: Icons.info,
-                  title: 'Thông tin ứng dụng',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => About()),
-                    );
-                  },
-                ),
                 Spacer(),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -252,7 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           valueColor:
                               AlwaysStoppedAnimation<Color>(Colors.white),
                         )
-                      : Text('Đăng xuất'),
+                      : Text('Đăng xuất', style: TextStyle( fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
               ],
             ),

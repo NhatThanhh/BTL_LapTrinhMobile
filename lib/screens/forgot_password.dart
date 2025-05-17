@@ -39,7 +39,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     } on FirebaseAuthException catch (e) {
       _showErrorDialog('Authentication error: ${e.message}');
     } catch (e) {
-      _showErrorDialog('An error occurred. Please try again.');
+      _showErrorDialog('Đã xảy ra lỗi. Vui lòng thử lại.');
     } finally {
       setState(() => _isLoading = false);
     }
@@ -47,7 +47,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   Future<void> _handleEmailReset(String email) async {
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-    _showSuccessDialog('Password reset email sent to $email');
+    _showSuccessDialog('Email đặt lại mật khẩu đã được gửi đến $email');
   }
 
   Future<void> _handlePhoneReset(String phone) async {
@@ -58,7 +58,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         .get();
 
     if (querySnapshot.docs.isEmpty) {
-      _showErrorDialog('No account found with this phone number.');
+      _showErrorDialog('Không tìm thấy tài khoản nào có số điện thoại này.');
       return;
     }
 
@@ -66,12 +66,12 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     final email = userData['email'] as String?;
 
     if (email == null || email.isEmpty) {
-      _showErrorDialog('Invalid email associated with this account.');
+      _showErrorDialog('Email không hợp lệ liên kết với tài khoản này.');
       return;
     }
 
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-    _showSuccessDialog('Password reset email sent to $email');
+    _showSuccessDialog('Email đặt lại mật khẩu đã được gửi đến $email');
   }
 
   void _showSuccessDialog(String message) {
@@ -156,7 +156,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   Widget _buildTitle() {
     return const Text(
-      'Forgot Password',
+      'Quên mật khẩu',
       style: TextStyle(
         fontSize: 28,
         fontWeight: FontWeight.bold,
@@ -167,7 +167,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   Widget _buildSubtitle() {
     return Text(
-      'Enter your email or phone number to reset password',
+      'Nhập email hoặc số điện thoại của bạn để đặt lại mật khẩu',
       textAlign: TextAlign.center,
       style: TextStyle(
         color: Colors.grey.shade700,
@@ -183,7 +183,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        labelText: 'Email or Phone Number',
+        labelText: 'Email hoặc số điện thoại',
         prefixIcon: const Icon(Icons.person, color: _primaryColor),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.0),
@@ -212,7 +212,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         child: _isLoading
             ? const CircularProgressIndicator(color: Colors.white)
             : const Text(
-          'Reset Password',
+          'Đặt lại mật khẩu',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -230,7 +230,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       ),
       icon: const Icon(Icons.arrow_back, color: _primaryColor),
       label: const Text(
-        'Back to Login',
+        'Đăng nhập',
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,

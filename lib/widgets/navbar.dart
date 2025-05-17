@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 class Navbar extends StatelessWidget {
-  const Navbar(
-      {super.key,
-        required this.selectedIndex,
-        required this.onDestinationSelected});
+  const Navbar({
+    super.key,
+    required this.selectedIndex,
+    required this.onDestinationSelected,
+    required this.onAddButtonPressed,
+  });
 
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
+  final VoidCallback onAddButtonPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -17,46 +20,80 @@ class Navbar extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            spreadRadius: 0,
-            offset: Offset(0, -3),
+            blurRadius: 5,
+            spreadRadius: 1,
           ),
         ],
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
       ),
-      child: NavigationBar(
-        onDestinationSelected: onDestinationSelected,
-        indicatorColor: Color(0xFFE6F0FF), // Màu xanh dương pastel nhạt
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        selectedIndex: selectedIndex,
-        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        height: 65, // Chiều cao phù hợp
-        destinations: <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home, color: Color(0xFF4285F4)),
-            icon: Icon(Icons.home_outlined, color: Colors.grey.shade600),
-            label: 'Trang chủ',
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          // Nút Trang chủ
+          _buildNavItem(0, Icons.home_rounded, Icons.home, 'Tổng quan'),
+
+          // Nút Thống kê
+
+          _buildNavItem(2, Icons.account_balance_wallet_outlined, Icons.account_balance_wallet_rounded, 'Danh sách'),
+          // Nút Thêm ở giữa
+          InkWell(
+            onTap: onAddButtonPressed,
+            child: Container(
+              height: 65,
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent.shade100,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.add, color: Colors.white, size: 26),
+                  ),
+                ],
+              ),
+            ),
           ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.bar_chart, color: Color(0xFF4285F4)),
-            icon: Icon(Icons.bar_chart_outlined, color: Colors.grey.shade600),
-            label: 'Thống kê',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.edit_note, color: Color(0xFF4285F4)),
-            icon: Icon(Icons.edit_note_outlined, color: Colors.grey.shade600),
-            label: 'Giao dịch',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.person_2, color: Color(0xFF4285F4)),
-            icon: Icon(Icons.person_2_outlined, color: Colors.grey.shade600),
-            label: 'Trang cá nhân',
-          ),
+
+          // Nút Giao dịch
+
+          _buildNavItem(1, Icons.insert_chart_outlined, Icons.insert_chart_rounded, 'Thống kê'),
+          // Nút Trang cá nhân
+          _buildNavItem(3, Icons.person_outline, Icons.person_rounded, 'Tài khoản'),
         ],
+      ),
+    );
+  }
+
+  // Widget xây dựng các mục điều hướng
+  Widget _buildNavItem(int index, IconData normalIcon, IconData selectedIcon, String label) {
+    final bool isSelected = index == selectedIndex;
+
+    return InkWell(
+      onTap: () => onDestinationSelected(index),
+      child: Container(
+        height: 65,
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              isSelected ? selectedIcon : normalIcon,
+              color: isSelected ? Color(0xFF4285F4) : Colors.grey.shade600,
+              size: 24,
+            ),
+            SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                color: isSelected ? Color(0xFF4285F4) : Colors.grey.shade600,
+                fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
